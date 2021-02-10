@@ -22,7 +22,10 @@ cmake --build . -j4
 
 ***NOTE***: On Raspberry there's a bug with the latest versions of the gcc compiler. 
 Basically the `<limits.h>` file has been modified, and the `PATH_MAX` macro is no longer there. 
-This causes an error when compiling `SDL2-2.0.9/src/haptic/linux/SDL_syshaptic.c`. 
+This causes an error when compiling `SDL/src/haptic/linux/SDL_syshaptic.c`. 
 **TO FIX THIS** you have two alternatives:
-1. Make sure you are using gcc-4.9 or an **earlier** version. When running cmake specify: `cmake -D CMAKE_C_COMPILER=gcc-4.9 -D CMAKE_CXX_COMPILER=g++-4.9 ..`
-2. Modify `SDL2-2.0.9/src/haptic/linux/SDL_syshaptic.c` and add `#define PATH_MAX 4096` at the beginning of the file.
+1. Make sure you are using gcc-4.9 or an **earlier** version. When running cmake specify: 
+```
+cmake -D CMAKE_C_COMPILER=gcc-4.9 -D CMAKE_CXX_COMPILER=g++-4.9 ..
+```
+2. Modify `SDL/src/haptic/linux/SDL_syshaptic.c` and add `#define PATH_MAX 4096` at the beginning of the file, altough this fix is not reccommended since it modifies the library.
