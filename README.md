@@ -28,4 +28,4 @@ This causes an error when compiling `SDL/src/haptic/linux/SDL_syshaptic.c`.
 ```
 cmake -D CMAKE_C_COMPILER=gcc-4.9 -D CMAKE_CXX_COMPILER=g++-4.9 ..
 ```
-2. Modify `SDL/src/haptic/linux/SDL_syshaptic.c` and add `#define PATH_MAX 4096` at the beginning of the file, altough this fix is not reccommended since it modifies the library.
+2. Modify `SDL/src/haptic/linux/SDL_syshaptic.c` and add `#define PATH_MAX 4096` at the beginning of the file, although this fix is not recommended since it modifies the library.
