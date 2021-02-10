@@ -2,6 +2,9 @@
 
 #=================== SDL2 ===================
 
+cmake_policy(SET CMP0077 NEW)
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
 if(RASPBIAN)
     set(VIDEO_MIR       OFF)
     set(VIDEO_VULKAN    OFF)
@@ -34,7 +37,7 @@ target_include_directories(GL3W PUBLIC ${GL3W_DIR})
 
 if(RASPBIAN)
     target_compile_definitions(GL3W PUBLIC -D__RASPBIAN__)
-    target_link_libraries(GL3W PUBLIC brcmGLESv2 brcmEGL)
+    target_link_libraries(GL3W PUBLIC brcmGLESv2 brcmEGL dl)
 else()
     target_link_libraries(GL3W PUBLIC ${OPENGL_LIBRARIES})
 endif()
