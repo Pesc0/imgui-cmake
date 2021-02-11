@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17.0)
 
-project(example_sdl_opengl3 LANGUAGES C CXX)
+project(imgui-cmake LANGUAGES C CXX)
 
 
 # ============ raspbian detection ============
@@ -17,8 +17,8 @@ endif()
 
 #set(BUILD_SHARED_LIBS OFF)
 add_subdirectory("libs")
+add_subdirectory("src")
 
 
-add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PUBLIC src/main.cpp)
-target_link_libraries(${PROJECT_NAME} IMGUI)
+add_subdirectory("examples")
+
