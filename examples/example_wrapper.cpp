@@ -98,15 +98,7 @@ private:
 int main(int, char**)
 {
     App app;
-    try 
-    {
-        app.Run("", 1280, 720);
-    }
-    catch (const std::exception &ex)
-    {
-        std::cout << "main catch." << std::endl;
-        std::cerr << ex.what();
-    }
+    app.Run("", 1280, 720);
 
     while (true)
     {
