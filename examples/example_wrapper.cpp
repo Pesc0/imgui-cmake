@@ -7,6 +7,42 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 
+// If you get an error please report on github. You may try different GL context version or GLSL version. See GL<>GLSL version table at the top of this file.
+static bool CheckShader(GLuint handle, const char* desc)
+{
+    GLint status = 0, log_length = 0;
+    glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+    glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &log_length);
+    if ((GLboolean)status == GL_FALSE)
+        fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to compile %s!\n", desc);
+    if (log_length > 1)
+    {
+        ImVector<char> buf;
+        buf.resize((int)(log_length + 1));
+        glGetShaderInfoLog(handle, log_length, NULL, (GLchar*)buf.begin());
+        fprintf(stderr, "Shader log:\n%s\n", buf.begin());
+    }
+    return (GLboolean)status == GL_TRUE;
+}
+
+// If you get an error please report on GitHub. You may try different GL context version or GLSL version.
+static bool CheckProgram(GLuint handle, const char* desc)
+{
+    GLint status = 0, log_length = 0;
+    glGetProgramiv(handle, GL_LINK_STATUS, &status);
+    glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &log_length);
+    if ((GLboolean)status == GL_FALSE)
+        fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to link %s! (with GLSL '%s')\n", desc, "");
+    if (log_length > 1)
+    {
+        ImVector<char> buf;
+        buf.resize((int)(log_length + 1));
+        glGetProgramInfoLog(handle, log_length, NULL, (GLchar*)buf.begin());
+        fprintf(stderr, "Program log:\n%s\n", buf.begin());
+    }
+    return (GLboolean)status == GL_TRUE;
+}
+
 GLuint CreateShader(GLenum type, const char *shaderSrc)
 {
     GLuint shader = glCreateShader(type);
@@ -17,33 +53,15 @@ GLuint CreateShader(GLenum type, const char *shaderSrc)
     glShaderSource(shader, 1, &shaderSrc, nullptr);
     glCompileShader(shader);
 
-    // Check the compile status
-    GLint compiled;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-
-    if (!compiled) 
-    {
-        GLint infoLen = 0;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-        
-        if (infoLen > 1)
-        {
-            char* infoLog = (char*)alloca(sizeof(char) * infoLen);
-
-            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-            std::cout << "Error compiling shader: " << infoLog << std::endl;            
-        }
-
-        glDeleteShader(shader);
+    if(CheckShader(shader, ""))
+        return shader;
+    else
         return 0;
-    }
-
-    return shader;
 }
 
 GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
 {
-    GLuint vertexShader = CreateShader(GL_VERTEX_SHADER,  vShader.c_str());
+    GLuint vertexShader = CreateShader(GL_VERTEX_SHADER, vShader.c_str());
     GLuint fragmentShader = CreateShader(GL_FRAGMENT_SHADER, fShader.c_str());
 
     GLuint programObject = glCreateProgram();
@@ -54,6 +72,7 @@ GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
     glAttachShader(programObject, fragmentShader);
 
     glLinkProgram(programObject);
+    if(!CheckProgram(programObject, "")) return 0;
     glValidateProgram(programObject);
 
     glDeleteShader(vertexShader);
