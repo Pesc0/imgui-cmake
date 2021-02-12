@@ -37,7 +37,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         // Decide GL+GLSL versions
         #if defined(__APPLE__)
             // GL 3.2 Core + GLSL 150
-            const char* glsl_version = "#version 150";
+            m_glsl_version = "#version 150";
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -45,7 +45,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
 
         #elif defined(__RASPBIAN__)
             // GL 2.0 ES + GLSL 100
-            const char* glsl_version = "#version 100";
+            m_glsl_version = "#version 100";
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -53,7 +53,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
 
         #else
             // GL 3.0 + GLSL 130
-            const char* glsl_version = "#version 130";
+            m_glsl_version = "#version 130";
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -89,7 +89,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
 
         // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(m_window, gl_context);
-        ImGui_ImplOpenGL3_Init(glsl_version);
+        ImGui_ImplOpenGL3_Init(m_glsl_version);
 
         // Load Fonts
         // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.

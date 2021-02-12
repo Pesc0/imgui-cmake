@@ -38,9 +38,12 @@ protected:
 
     // Window handle to interact trough SDL functions.
     SDL_Window *m_window;
+    const char *GetGlslVersion() const { return m_glsl_version; }
 
 private:
     bool m_running = false;
     std::thread m_gui_thread;
     void _run(const std::string& title, int width , int height);
+
+    char* m_glsl_version;
 };

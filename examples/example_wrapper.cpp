@@ -6,6 +6,64 @@
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+
+GLuint CreateShader(GLenum type, const char *shaderSrc)
+{
+    GLuint shader = glCreateShader(type);
+
+    if (shader == 0) return 0;
+        
+    // Set source and compile    
+    glShaderSource(shader, 1, &shaderSrc, nullptr);
+    glCompileShader(shader);
+
+    // Check the compile status
+    GLint compiled;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+
+    if (!compiled) 
+    {
+        GLint infoLen = 0;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
+        
+        if (infoLen > 1)
+        {
+            char* infoLog = (char*)alloca(sizeof(char) * infoLen);
+
+            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
+            std::cout << "Error compiling shader: " << infoLog << std::endl;            
+        }
+
+        glDeleteShader(shader);
+        return 0;
+    }
+
+    return shader;
+}
+
+GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
+{
+    GLuint vertexShader = CreateShader(GL_VERTEX_SHADER,  vShader.c_str());
+    GLuint fragmentShader = CreateShader(GL_FRAGMENT_SHADER, fShader.c_str());
+
+    GLuint programObject = glCreateProgram();
+    if (programObject == 0)
+        return 0;
+
+    glAttachShader(programObject, vertexShader);
+    glAttachShader(programObject, fragmentShader);
+
+    glLinkProgram(programObject);
+    glValidateProgram(programObject);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    return programObject;
+}
+
+
+
 class App final : public ImGuiWrapper
 {
 public:
@@ -15,15 +73,32 @@ private:
 
     void OnRunStart() override
     {
-        SDL_SetWindowTitle(m_window, "Testing...");
+        SDL_SetWindowTitle(m_window, "Testing..."); // Change title
         SDL_GL_SetSwapInterval(0); // Disable vsync
 
-        glEnable(GL_DEPTH_TEST);
-        glGenBuffers(1,&vbo); //generate an index for the vertexbuffer
-        glBindBuffer(GL_ARRAY_BUFFER,vbo);    //use vbo as ARRAY_BUFFER
-        glBufferData(GL_ARRAY_BUFFER,sizeof(f),f,GL_STATIC_DRAW);//fill up the array with vertex and color-data
+        glGenBuffers(1,&vbo);                                       //generate an index for the vertexbuffer
+        glBindBuffer(GL_ARRAY_BUFFER,vbo);                          //use vbo as ARRAY_BUFFER
+        glBufferData(GL_ARRAY_BUFFER,sizeof(f),f,GL_STATIC_DRAW);   //fill up the array with vertex and color-data
         glEnableVertexAttribArray(w);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, BUFFER_OFFSET(0));
+
+        std::string vShader =  
+        "\n"
+        "in vec4 position;    \n"
+        "void main()                  \n"
+        "{                            \n"
+        "   gl_Position = position;  \n"
+        "}                            \n";
+    
+        std::string fShader = 
+        "\n"
+        "void main()                                  \n"
+        "{                                            \n"
+        "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);  \n"
+        "}                                            \n";
+
+        GLuint program = CreateProgram(GetGlslVersion() + vShader, GetGlslVersion() +fShader);
+        glUseProgram(program);
     }
 
     void OnNewFrame() override
@@ -75,7 +150,6 @@ private:
 
     void DrawOpenGL() override
     {
-        glClear(GL_DEPTH_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLES,0,3); 
     }
 
@@ -87,11 +161,11 @@ private:
     bool show_demo_window = true;
     bool show_another_window = false;
 
+    unsigned int framecounter = 0;
+
     GLuint vbo;
     GLuint w=0;
     float f[6]={0.0, 1.0, -1.0, -1.0, 1.0, -1.0};    //vertex array
-
-    unsigned int framecounter = 0;
 };
 
 
