@@ -95,15 +95,15 @@ private:
         SDL_SetWindowTitle(m_window, "Testing..."); // Change title
         SDL_GL_SetSwapInterval(0); // Disable vsync
 
-        glGenBuffers(1,&vbo);                                       //generate an index for the vertexbuffer
-        glBindBuffer(GL_ARRAY_BUFFER,vbo);                          //use vbo as ARRAY_BUFFER
-        glBufferData(GL_ARRAY_BUFFER,sizeof(f),f,GL_STATIC_DRAW);   //fill up the array with vertex and color-data
+//        glGenBuffers(1,&vbo);                                       //generate an index for the vertexbuffer
+//        glBindBuffer(GL_ARRAY_BUFFER,vbo);                          //use vbo as ARRAY_BUFFER
+//        glBufferData(GL_ARRAY_BUFFER,sizeof(f),f,GL_STATIC_DRAW);   //fill up the array with vertex and color-data
         glEnableVertexAttribArray(w);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, BUFFER_OFFSET(0));
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, f);
 
         std::string vShader =  
         "\n"
-        "in vec4 position;    \n"
+        "attribute vec4 position;    \n"
         "void main()                  \n"
         "{                            \n"
         "   gl_Position = position;  \n"
@@ -169,6 +169,8 @@ private:
 
     void DrawOpenGL() override
     {
+        glEnableVertexAttribArray(w);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, f);
         glDrawArrays(GL_TRIANGLES,0,3); 
     }
 
