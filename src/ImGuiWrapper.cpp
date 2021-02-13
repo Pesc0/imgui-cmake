@@ -89,7 +89,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
 
         // Setup Platform/Renderer backends
         ImGui_ImplSDL2_InitForOpenGL(m_window, gl_context);
-        ImGui_ImplOpenGL3_Init(m_glsl_version);
+        ImGui_ImplOpenGL3_Init(m_glsl_version.c_str());
 
         // Load Fonts
         // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.

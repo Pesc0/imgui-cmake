@@ -4,76 +4,74 @@
 #include <thread>
 #include <iostream>
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-
-// If you get an error please report on github. You may try different GL context version or GLSL version. See GL<>GLSL version table at the top of this file.
-static bool CheckShader(GLuint handle, const char* desc)
+static bool CheckShader(GLuint handle)
 {
-    GLint status = 0, log_length = 0;
+    GLint status, log_length;
     glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
     glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &log_length);
+
     if ((GLboolean)status == GL_FALSE)
-        fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to compile %s!\n", desc);
+        std::cerr << "Failed to compile shader!\n";
+
     if (log_length > 1)
     {
-        ImVector<char> buf;
-        buf.resize((int)(log_length + 1));
-        glGetShaderInfoLog(handle, log_length, NULL, (GLchar*)buf.begin());
-        fprintf(stderr, "Shader log:\n%s\n", buf.begin());
+        char *buf = new char[log_length + 1];
+        glGetShaderInfoLog(handle, log_length, NULL, buf);
+        std::cerr << "Shader log: " << buf << '\n';
+        delete buf;
     }
     return (GLboolean)status == GL_TRUE;
 }
 
-// If you get an error please report on GitHub. You may try different GL context version or GLSL version.
-static bool CheckProgram(GLuint handle, const char* desc)
+static bool CheckProgram(GLuint handle)
 {
-    GLint status = 0, log_length = 0;
+    GLint status, log_length;
     glGetProgramiv(handle, GL_LINK_STATUS, &status);
     glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &log_length);
+
     if ((GLboolean)status == GL_FALSE)
-        fprintf(stderr, "ERROR: ImGui_ImplOpenGL3_CreateDeviceObjects: failed to link %s! (with GLSL '%s')\n", desc, "");
+        std::cerr << "Failed to link program!\n";
+
     if (log_length > 1)
     {
-        ImVector<char> buf;
-        buf.resize((int)(log_length + 1));
-        glGetProgramInfoLog(handle, log_length, NULL, (GLchar*)buf.begin());
-        fprintf(stderr, "Program log:\n%s\n", buf.begin());
+        char *buf = new char[log_length + 1];
+        glGetProgramInfoLog(handle, log_length, NULL, buf);
+        std::cerr << "Program log: " << buf << '\n';
+        delete buf;
     }
     return (GLboolean)status == GL_TRUE;
 }
 
-GLuint CreateShader(GLenum type, const char *shaderSrc)
+GLuint CreateShader(GLenum type, const std::string &shaderSrc)
 {
     GLuint shader = glCreateShader(type);
-
     if (shader == 0) return 0;
-        
-    // Set source and compile    
-    glShaderSource(shader, 1, &shaderSrc, nullptr);
+
+    // Set source and compile
+    const char *src = shaderSrc.c_str();
+    glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
 
-    if(CheckShader(shader, ""))
-        return shader;
-    else
-        return 0;
+    if(CheckShader(shader) == false) return 0;
+
+    return shader;
 }
 
 GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
 {
-    GLuint vertexShader = CreateShader(GL_VERTEX_SHADER, vShader.c_str());
-    GLuint fragmentShader = CreateShader(GL_FRAGMENT_SHADER, fShader.c_str());
-
     GLuint programObject = glCreateProgram();
-    if (programObject == 0)
-        return 0;
+    if (programObject == 0) return 0;
+
+    GLuint vertexShader = CreateShader(GL_VERTEX_SHADER, vShader);
+    GLuint fragmentShader = CreateShader(GL_FRAGMENT_SHADER, fShader);
 
     glAttachShader(programObject, vertexShader);
     glAttachShader(programObject, fragmentShader);
 
     glLinkProgram(programObject);
-    if(!CheckProgram(programObject, "")) return 0;
-    glValidateProgram(programObject);
+
+    if(CheckProgram(programObject) == 0) return 0;
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -95,28 +93,22 @@ private:
         SDL_SetWindowTitle(m_window, "Testing..."); // Change title
         SDL_GL_SetSwapInterval(0); // Disable vsync
 
-//        glGenBuffers(1,&vbo);                                       //generate an index for the vertexbuffer
-//        glBindBuffer(GL_ARRAY_BUFFER,vbo);                          //use vbo as ARRAY_BUFFER
-//        glBufferData(GL_ARRAY_BUFFER,sizeof(f),f,GL_STATIC_DRAW);   //fill up the array with vertex and color-data
-        glEnableVertexAttribArray(w);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, f);
-
-        std::string vShader =  
+        std::string vShader =
         "\n"
-        "attribute vec4 position;    \n"
-        "void main()                  \n"
-        "{                            \n"
-        "   gl_Position = position;  \n"
-        "}                            \n";
-    
-        std::string fShader = 
+        "attribute vec4 position;       \n"
+        "void main()                    \n"
+        "{                              \n"
+        "   gl_Position = position;     \n"
+        "}                              \n";
+
+        std::string fShader =
         "\n"
         "void main()                                  \n"
         "{                                            \n"
         "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);  \n"
         "}                                            \n";
 
-        GLuint program = CreateProgram(GetGlslVersion() + vShader, GetGlslVersion() +fShader);
+        GLuint program = CreateProgram(GetGlslVersion() + vShader, GetGlslVersion() + fShader);
         glUseProgram(program);
     }
 
@@ -169,8 +161,8 @@ private:
 
     void DrawOpenGL() override
     {
-        glEnableVertexAttribArray(w);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, f);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle_verts);
         glDrawArrays(GL_TRIANGLES,0,3); 
     }
 
@@ -184,9 +176,7 @@ private:
 
     unsigned int framecounter = 0;
 
-    GLuint vbo;
-    GLuint w=0;
-    float f[6]={0.0, 1.0, -1.0, -1.0, 1.0, -1.0};    //vertex array
+    float triangle_verts[6] = {0.0, 1.0, -1.0, -1.0, 1.0, -1.0};    //vertex array
 };
 
 
