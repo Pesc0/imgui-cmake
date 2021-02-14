@@ -12,7 +12,7 @@ class ImGuiWrapper
 public:
 
     ImGuiWrapper() {}
-    virtual ~ImGuiWrapper() {}
+    virtual ~ImGuiWrapper() { Quit(); }
 
     void Run(const std::string& title = "Dear ImGui SDL2+OpenGL3 example", int width = 640, int height = 480);
     void Quit();
@@ -38,7 +38,7 @@ protected:
 
     // Window handle to interact trough SDL functions.
     SDL_Window *m_window;
-    
+
     inline const std::string &GetGlslVersion() const { return m_glsl_version; }
 
     inline bool IsRunning() const { return m_running; }

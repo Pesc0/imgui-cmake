@@ -9,6 +9,9 @@
 void ImGuiWrapper::Run(const std::string& title, int width, int height)
 {
     if (m_running) { return; }
+
+    Quit(); // Join thread brefore starting again if the window was closed by the user from the renderer thread. 
+
     m_running = true;
     m_gui_thread = std::thread(&ImGuiWrapper::_run, this, title, width, height);
 }
