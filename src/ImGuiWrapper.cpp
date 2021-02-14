@@ -151,11 +151,11 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
 
+        OnWindowClose();
+
         SDL_GL_DeleteContext(gl_context);
         SDL_DestroyWindow(m_window);
         SDL_Quit();
-
-        OnWindowClose();
 
     }
     catch (const std::exception &ex)

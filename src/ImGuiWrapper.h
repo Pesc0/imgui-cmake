@@ -38,7 +38,10 @@ protected:
 
     // Window handle to interact trough SDL functions.
     SDL_Window *m_window;
-    std::string GetGlslVersion() const { return m_glsl_version; }
+    
+    inline const std::string &GetGlslVersion() const { return m_glsl_version; }
+
+    inline bool IsRunning() const { return m_running; }
 
 private:
     bool m_running = false;

@@ -43,7 +43,7 @@ static bool CheckProgram(GLuint handle)
     return (GLboolean)status == GL_TRUE;
 }
 
-GLuint CreateShader(GLenum type, const std::string &shaderSrc)
+static GLuint CreateShader(GLenum type, const std::string &shaderSrc)
 {
     GLuint shader = glCreateShader(type);
     if (shader == 0) return 0;
@@ -58,7 +58,7 @@ GLuint CreateShader(GLenum type, const std::string &shaderSrc)
     return shader;
 }
 
-GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
+static GLuint CreateProgram(const std::string &vShader, const std::string &fShader)
 {
     GLuint programObject = glCreateProgram();
     if (programObject == 0) return 0;
@@ -90,8 +90,8 @@ private:
 
     void OnRunStart() override
     {
-        SDL_SetWindowTitle(m_window, "Testing..."); // Change title
-        SDL_GL_SetSwapInterval(0); // Disable vsync
+        SDL_SetWindowTitle(m_window, "Testing..."); // Override the title set in Run()
+        SDL_GL_SetSwapInterval(0);                  // Override vsync setting by disabling it
 
         std::string vShader =
         "\n"
@@ -108,7 +108,7 @@ private:
         "   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);  \n"
         "}                                            \n";
 
-        GLuint program = CreateProgram(GetGlslVersion() + vShader, GetGlslVersion() + fShader);
+        program = CreateProgram(GetGlslVersion() + vShader, GetGlslVersion() + fShader);
         glUseProgram(program);
     }
 
@@ -117,7 +117,6 @@ private:
         framecounter++;
     }
 
-    // Called once per frame. Place ImGui calls here. Do not make raw OpenGL calls here.
     void DrawImGui() override
     {
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -134,6 +133,7 @@ private:
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Checkbox("Show triangle", &show_triangle);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&m_clear_color); // Edit 3 floats representing a color
@@ -161,22 +161,28 @@ private:
 
     void DrawOpenGL() override
     {
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle_verts);
-        glDrawArrays(GL_TRIANGLES,0,3); 
+        if (show_triangle)
+        {
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle_verts);
+            glDrawArrays(GL_TRIANGLES,0,3); 
+        }
     }
 
     void OnWindowClose() override
     {
         std::cout << "Window closed." << std::endl; 
+        glDeleteProgram(program);
     }
 
     bool show_demo_window = true;
     bool show_another_window = false;
+    bool show_triangle = true;
 
     unsigned int framecounter = 0;
 
-    float triangle_verts[6] = {0.0, 1.0, -1.0, -1.0, 1.0, -1.0};    //vertex array
+    float triangle_verts[6] = {0.0, 1.0, -1.0, -1.0, 1.0, -1.0}; 
+    GLuint program;
 };
 
 
