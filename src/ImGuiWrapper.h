@@ -31,7 +31,7 @@ protected:
     virtual void DrawOpenGL() {}
 
     // Called once when the window has been closed, either by the user or by calling Quit().
-    virtual void OnWindowClose() {}
+    virtual void OnRunEnd() {}
 
     // The background color. This can be modified at any time.
     ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

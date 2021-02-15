@@ -16,9 +16,10 @@ endif()
 
 
 #set(BUILD_SHARED_LIBS OFF)
+
 add_subdirectory("libs")
 add_subdirectory("src")
 
-
-add_subdirectory("examples")
-
+if(BUILD_EXAMPLES)
+        add_subdirectory("examples")
+endif()

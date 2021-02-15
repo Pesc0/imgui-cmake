@@ -169,7 +169,7 @@ private:
         }
     }
 
-    void OnWindowClose() override
+    void OnRunEnd() override
     {
         std::cout << "Window closed." << std::endl; 
         glDeleteProgram(program);
