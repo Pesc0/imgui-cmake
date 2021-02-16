@@ -131,7 +131,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
                     m_running = false;
             }
 
-            OnNewFrame();
+            OnNewFrame(&event);
 
             // Start the Dear ImGui frame
             ImGui_ImplOpenGL3_NewFrame();

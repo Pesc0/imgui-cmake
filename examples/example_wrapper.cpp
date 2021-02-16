@@ -112,7 +112,7 @@ private:
         glUseProgram(program);
     }
 
-    void OnNewFrame() override
+    void OnNewFrame(const SDL_Event* event) override
     {
         framecounter++;
     }

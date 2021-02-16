@@ -22,7 +22,7 @@ protected:
     virtual void OnRunStart() {}
 
     // Called once per frame, to allow for application logic updates.
-    virtual void OnNewFrame() {}
+    virtual void OnNewFrame(const SDL_Event* event) {}
 
     // Called once per frame. Place ImGui calls here. Do not make raw OpenGL calls here.
     virtual void DrawImGui() {}
