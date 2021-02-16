@@ -14,12 +14,12 @@ if(RASPBIAN)
 endif()
 
 set(SDL2_DIR "SDL")
-add_subdirectory(${SDL2_DIR}) 
+add_subdirectory(${SDL2_DIR})
 
 
 #=================== OpenGL ===================
 
-# Do not search for OpenGL on raspbian. 
+# Do not search for OpenGL on raspbian.
 # There we will link with brcmGLESv2 and brcmEGL instead.
 
 if(NOT RASPBIAN)
@@ -37,10 +37,12 @@ target_include_directories(GL3W PUBLIC ${GL3W_DIR})
 
 if(RASPBIAN)
     target_compile_definitions(GL3W PUBLIC -D__RASPBIAN__)
-    target_link_libraries(GL3W PUBLIC brcmGLESv2 brcmEGL dl)
+    target_link_libraries(GL3W PUBLIC brcmGLESv2 brcmEGL)
 else()
     target_link_libraries(GL3W PUBLIC ${OPENGL_LIBRARIES})
 endif()
+
+target_link_libraries(GL3W PUBLIC ${CMAKE_DL_LIBS})
 
 
 #=================== IMGUI ===================
@@ -48,7 +50,7 @@ endif()
 set(IMGUI_DIR "imgui")
 add_library(IMGUI STATIC)
 
-target_sources( IMGUI 
+target_sources( IMGUI
                 PRIVATE
                     ${IMGUI_DIR}/imgui_demo.cpp
                     ${IMGUI_DIR}/imgui_draw.cpp
@@ -61,12 +63,12 @@ target_sources( IMGUI
                     ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
                 )
 
-target_include_directories( IMGUI 
+target_include_directories( IMGUI
                             PUBLIC ${IMGUI_DIR}
                             PUBLIC ${IMGUI_DIR}/backends
                             PUBLIC ${SDL2_DIR}/include
                             )
-                            
+
 target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_GL3W)
 
 if(RASPBIAN)

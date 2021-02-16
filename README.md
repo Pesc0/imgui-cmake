@@ -2,7 +2,7 @@
 
 Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. A thin multithreaded wrapper is also provided. This should work on:
 - Windows (tested, working)
-- Linux 
+- Linux (tested, working)
 - Mac OS
 - Raspberry Pi (tested, working)
 
