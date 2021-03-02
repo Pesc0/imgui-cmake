@@ -88,7 +88,7 @@ public:
 
 private:
 
-    void OnRunStart() override
+    void OnInit() override
     {
         SDL_SetWindowTitle(m_window, "Testing..."); // Override the title set in Run()
         SDL_GL_SetSwapInterval(0);                  // Override vsync setting by disabling it
@@ -117,7 +117,7 @@ private:
         framecounter++;
     }
 
-    void DrawImGui() override
+    void Draw() override
     {
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
@@ -157,10 +157,7 @@ private:
                 show_another_window = false;
             ImGui::End();
         }
-    }
 
-    void DrawOpenGL() override
-    {
         if (show_triangle)
         {
             glEnableVertexAttribArray(0);
@@ -169,7 +166,7 @@ private:
         }
     }
 
-    void OnRunEnd() override
+    void OnExit() override
     {
         std::cout << "Window closed." << std::endl; 
         glDeleteProgram(program);
