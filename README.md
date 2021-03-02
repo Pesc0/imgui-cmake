@@ -37,4 +37,5 @@ This causes an error when compiling `SDL/src/haptic/linux/SDL_syshaptic.c`. To f
 # About the examples
 
 - `example_sdl_opengl3`: except for the minor raspbian specific modifications listed above the code is exactly the same as the original imgui example. It does not use the provided wrapper.
-- `example_wrapper`: showcases how to use the multithreaded wrapper. Additionally to the imgui example a red triangle is drawn on the background, to show how openGL code can be used with the library.
+- `example_wrapper_simple`: showcases how to use the multithreaded wrapper by displaying the imgui demo window. If all you want to do is get imgui working you should use this code.
+- `example_wrapper_withGL`: showcases how to use the multithreaded wrapper and additionally to the imgui demo a red triangle is drawn on the background, to show how OpenGL code can be used with the library. If you are doing anything remotely serious with OpenGL it is recommended you write your own engine and use the raw SDL and ImGui interfaces used in `example_sdl_opengl3`.
