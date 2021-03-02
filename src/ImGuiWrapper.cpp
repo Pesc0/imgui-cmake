@@ -112,7 +112,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
         //IM_ASSERT(font != NULL);
 
-        OnRunStart();
+        OnInit();
 
         while (m_running)
         {
@@ -138,14 +138,12 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
             ImGui_ImplSDL2_NewFrame(m_window);
             ImGui::NewFrame();
 
-            DrawImGui();
-
             // Rendering
             glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
             glClearColor(m_clear_color.x, m_clear_color.y, m_clear_color.z, m_clear_color.w);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            DrawOpenGL();
+            Draw();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -157,7 +155,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
 
-        OnRunEnd();
+        OnExit();
 
         SDL_GL_DeleteContext(gl_context);
         SDL_DestroyWindow(m_window);

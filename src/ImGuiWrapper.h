@@ -19,19 +19,17 @@ public:
 
 protected:
     // Called once after Run() is called and the window has been created.
-    virtual void OnRunStart() {}
+    virtual void OnInit() {}
 
-    // Called once per frame, to allow for application logic updates.
+    // Called once per frame, to allow for application logic updates. 
+    // The argument event has already been procesed by ImGui.
     virtual void OnNewFrame(const SDL_Event* event) {}
 
-    // Called once per frame. Place ImGui calls here. Do not make raw OpenGL calls here.
-    virtual void DrawImGui() {}
-
-    // Generic OpenGL drawing context, called immediately after DrawImGui().
-    virtual void DrawOpenGL() {}
+    // Called once per frame, place imgui code and OpenGL draw calls here.
+    virtual void Draw() {}
 
     // Called once when the window has been closed, either by the user or by calling Quit().
-    virtual void OnRunEnd() {}
+    virtual void OnExit() {}
 
     // The background color. This can be modified at any time.
     ImVec4 m_clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
