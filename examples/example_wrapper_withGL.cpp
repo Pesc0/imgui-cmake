@@ -84,7 +84,7 @@ static GLuint CreateProgram(const std::string &vShader, const std::string &fShad
 class App final : public ImGuiWrapper
 {
 public:
-    App() {}
+    App() = default;
 
 private:
 
@@ -186,7 +186,7 @@ private:
 int main(int, char**)
 {
     App app;
-    app.Run("", 1280, 720);
+    app.Run("This title will be overwritten.", 1280, 720);
 
     while (true)
     {
