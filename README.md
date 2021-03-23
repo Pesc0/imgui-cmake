@@ -38,7 +38,11 @@ To run the application windowed we would need to use OpenGL, which is not hardwa
 The exact modifications can be seen in the patch file found [here](https://github.com/ocornut/imgui/issues/2822#issuecomment-573319787).
 - On Raspberry there's a bug with the latest versions of the gcc compiler. Basically the `<limits.h>` file has been modified, and the `PATH_MAX` macro is no longer there. 
 This causes an error when compiling `SDL/src/haptic/linux/SDL_syshaptic.c`. To fix this make sure you are using gcc-4.9 or an **earlier** version. When running cmake specify: `-D CMAKE_C_COMPILER=gcc-4.9 -D CMAKE_CXX_COMPILER=g++-4.9`. An alternative would be to add `#define PATH_MAX 4096` at the beginning of the SDL file, although this is not recommended since it modifies the library.
-- The examples main files have some raspbian specific code in two places: the first is needed to choose the correct glsl shader version and to set the proper GL attributes in SDL. The second sets the `SDL_WINDOW_FULLSCREEN_DESKTOP` flag when creating the SDL window, since the raspberry only renders fullscreen. If this is not done and the window resolution doesn't match the monitor resolution the video will still be fullscreen but the mouse cusror will be offset from the actual registered position.
+- The examples main files have some raspbian specific code in two places: the first is needed to choose the correct glsl shader version and to set the proper GL attributes in SDL. The second sets the `SDL_WINDOW_FULLSCREEN_DESKTOP` flag when creating the SDL window, since the raspberry only renders fullscreen. If this is not done and the window resolution doesn't match the monitor resolution the video will still be fullscreen but the mouse cursor will be offset from the actual registered position.
+
+# Performance on Raspberry
+
+On a Raspberry Pi 3 the performance is around 100-130 fps at 1080p for the imgui demo. It can drop down to as low as 30 or even less fps if certain demanding features are being displayed. One example of such features are the colored buttons present in the demo under `layout & scrolling -> scrolling`.
 
 # About the examples
 
