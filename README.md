@@ -1,3 +1,6 @@
+# WARNING
+Not all information here is accurate. For example gl3w didnt need to be modified, it was sufficient to `#include <GLES/gl2.h>`. Also the fact that OpenGL is needed to run inside an X windows is wrong. For more accurate information refer to [this](https://github.com/ocornut/imgui/pull/2837) tread.
+
 # imgui-cmake
 
 Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. A thin multithreaded wrapper is also provided. This should work on:
