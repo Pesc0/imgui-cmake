@@ -5,12 +5,7 @@
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
-#Disable all backends on rasbpian, this avoids having to 'export SDL_VIDEODRIVER=rpi' before running the executable
-if(RASPBIAN AND FORCE_RPI_DRIVER)
-    set(VIDEO_MIR       OFF)
-    set(VIDEO_VULKAN    OFF)
-    set(VIDEO_WAYLAND   OFF)
-    set(VIDEO_OPENGL    OFF)
+if(RASPBIAN)
     set(VIDEO_RPI       ON)
 endif()
 

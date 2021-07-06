@@ -21,9 +21,6 @@ endif()
 #Use the brcmGLESv2 driver instead of GLESv2. May be required on versions older than pi4
 #set(USE_BROADCOM_DRIVER ON)
 
-#Disable all except 'rpi' SDL backends on rasbpian, this avoids having to 'export SDL_VIDEODRIVER=rpi' before running the executable
-#set(FORCE_RPI_DRIVER ON)
-
 
 add_subdirectory("libs")
 add_subdirectory("src")
