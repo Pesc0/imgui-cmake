@@ -10,4 +10,5 @@ target_include_directories(IMGUIWRAPPER PUBLIC . )
 if(UNIX)
     target_link_libraries(IMGUIWRAPPER PUBLIC pthread)
 endif()
+
 target_link_libraries(IMGUIWRAPPER PUBLIC IMGUI)

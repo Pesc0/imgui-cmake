@@ -38,22 +38,20 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         }
 
         // Decide GL+GLSL versions
-        #if defined(__APPLE__)
+        #if defined(IMGUI_IMPL_OPENGL_ES2)
+            // GL ES 2.0 + GLSL 100
+            m_glsl_version = "#version 100";
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        #elif defined(__APPLE__)
             // GL 3.2 Core + GLSL 150
             m_glsl_version = "#version 150";
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); // Always required on Mac
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-
-        #elif defined(__RASPBIAN__)
-            // GL 2.0 ES + GLSL 100
-            m_glsl_version = "#version 100";
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-
         #else
             // GL 3.0 + GLSL 130
             m_glsl_version = "#version 130";
@@ -69,18 +67,17 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
         SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
         SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-        #ifdef __RASPBIAN__
-            window_flags = (SDL_WindowFlags)((int)window_flags | (int)SDL_WINDOW_FULLSCREEN_DESKTOP);
-        #endif
         m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, window_flags);
         SDL_GLContext gl_context = SDL_GL_CreateContext(m_window);
         SDL_GL_MakeCurrent(m_window, gl_context);
         SDL_GL_SetSwapInterval(1); // Enable vsync
 
-        if (gl3wInit() != 0)
-        {
-            throw std::runtime_error("Failed to initialize OpenGL loader!");
-        }
+        #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
+            if (gl3wInit() != 0)
+            {
+                throw std::runtime_error("Failed to initialize OpenGL loader!");
+            }
+        #endif
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -135,7 +132,7 @@ void ImGuiWrapper::_run(const std::string& title, int width, int height)
 
             // Start the Dear ImGui frame
             ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplSDL2_NewFrame(m_window);
+            ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
 
             // Rendering

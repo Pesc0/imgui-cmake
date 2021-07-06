@@ -2,7 +2,12 @@
 
 #include "imgui.h"
 #include <SDL.h>
-#include <GL/gl3w.h>
+
+#if defined(IMGUI_IMPL_OPENGL_ES2)
+    #include <GLES2/gl2.h>
+#else
+    #include <GL/gl3w.h>
+#endif
 
 #include <string>
 #include <thread>

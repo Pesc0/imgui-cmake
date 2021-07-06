@@ -5,7 +5,8 @@
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
-if(RASPBIAN)
+#Disable all backends on rasbpian, this avoids having to 'export SDL_VIDEODRIVER=rpi' before running the executable
+if(RASPBIAN AND FORCE_RPI_DRIVER)
     set(VIDEO_MIR       OFF)
     set(VIDEO_VULKAN    OFF)
     set(VIDEO_WAYLAND   OFF)
@@ -19,30 +20,22 @@ add_subdirectory(${SDL2_DIR})
 
 #=================== OpenGL ===================
 
-# Do not search for OpenGL on raspbian.
-# There we will link with brcmGLESv2 and brcmEGL instead.
-
-if(NOT RASPBIAN)
-    find_package(OpenGL REQUIRED)
+# Do not search for OpenGL on raspbian. Use GLES instead.
+if(RASPBIAN)
+    set(USE_GLES ON) 
 endif()
 
+if(NOT USE_GLES)
+    find_package(OpenGL REQUIRED)
 
-#=================== GL3W ===================
+    #Use gl3w as GL loader. It is the default in imgui's examples.
+    set(GL3W_DIR "imgui/examples/libs/gl3w")
+    add_library(GL3W STATIC)
 
-set(GL3W_DIR "gl3w")
-add_library(GL3W STATIC)
-
-target_sources(GL3W PRIVATE ${GL3W_DIR}/GL/gl3w.c)
-target_include_directories(GL3W PUBLIC ${GL3W_DIR})
-
-if(RASPBIAN)
-    target_compile_definitions(GL3W PUBLIC -D__RASPBIAN__)
-    target_link_libraries(GL3W PUBLIC brcmGLESv2 brcmEGL)
-else()
+    target_sources(GL3W PRIVATE ${GL3W_DIR}/GL/gl3w.c)
+    target_include_directories(GL3W PUBLIC ${GL3W_DIR})
     target_link_libraries(GL3W PUBLIC ${OPENGL_LIBRARIES})
 endif()
-
-target_link_libraries(GL3W PUBLIC ${CMAKE_DL_LIBS})
 
 
 #=================== IMGUI ===================
@@ -69,13 +62,29 @@ target_include_directories( IMGUI
                             PUBLIC ${SDL2_DIR}/include
                             )
 
-target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_GL3W)
 
 if(RASPBIAN)
-    target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_ES2)
-    target_link_directories(IMGUI PUBLIC /opt/vc/lib)
+    target_compile_definitions(IMGUI PUBLIC -D__RASPBIAN__)
 endif()
 
-target_link_libraries(IMGUI PUBLIC GL3W SDL2main SDL2)
+
+if(USE_GLES)
+    target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_ES2)
+
+    if(RASPBIAN AND USE_BROADCOM_DRIVER)
+        target_link_directories(IMGUI PUBLIC /opt/vc/lib)
+        target_link_libraries(IMGUI PUBLIC brcmGLESv2 brcmEGL)
+    else()
+        target_link_libraries(IMGUI PUBLIC GLESv2)
+    endif()
+
+else()
+    target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_GL3W)
+    target_link_libraries(IMGUI PUBLIC GL3W)
+
+endif()
+
+
+target_link_libraries(IMGUI PUBLIC SDL2main SDL2 ${CMAKE_DL_LIBS})
 
 
