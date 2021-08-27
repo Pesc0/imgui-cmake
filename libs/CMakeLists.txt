@@ -9,13 +9,13 @@ if(RASPBIAN)
     set(VIDEO_RPI ON)
 endif()
 
-set(SDL2_DIR "SDL")
+set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL)
 add_subdirectory(${SDL2_DIR})
 
 
 #=================== IMGUI ===================
 
-set(IMGUI_DIR "imgui")
+set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/imgui)
 add_library(IMGUI STATIC)
 
 target_sources( IMGUI
@@ -62,3 +62,13 @@ endif()
 
 
 target_link_libraries(IMGUI PUBLIC SDL2main SDL2 ${CMAKE_DL_LIBS})
+
+
+#=================== EXAMPLE ===================
+
+if(BUILD_EXAMPLES)
+    add_executable(example_sdl_opengl3)
+    target_sources(example_sdl_opengl3 PUBLIC ${IMGUI_DIR}/examples/example_sdl_opengl3/main.cpp)
+    target_link_libraries(example_sdl_opengl3 IMGUI)
+    set_target_properties(example_sdl_opengl3 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
