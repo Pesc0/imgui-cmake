@@ -4,7 +4,7 @@ Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple
 - Windows 
 - Linux (tested, working)
 - Mac OS
-- Raspberry Pi (tested on Pi3, currently not working)
+- Raspberry Pi (tested on Pi3, working)
 
 # How to Build
 
