@@ -11,6 +11,7 @@ Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple
 To test the examples:
 ```
 git clone https://github.com/Pesc0/imgui-cmake --recurse-submodules
+git submodule update --remote
 cd imgui-cmake
 mkdir build && cd build
 cmake -D BUILD_EXAMPLES=ON ..
