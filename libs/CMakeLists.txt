@@ -6,31 +6,11 @@ cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 if(RASPBIAN)
-    set(VIDEO_RPI       ON)
+    set(VIDEO_RPI ON)
 endif()
 
 set(SDL2_DIR "SDL")
 add_subdirectory(${SDL2_DIR})
-
-
-#=================== OpenGL ===================
-
-# Do not search for OpenGL on raspbian. Use GLES instead.
-if(RASPBIAN)
-    set(USE_GLES ON) 
-endif()
-
-if(NOT USE_GLES)
-    find_package(OpenGL REQUIRED)
-
-    #Use gl3w as GL loader. It is the default in imgui's examples.
-    set(GL3W_DIR "imgui/examples/libs/gl3w")
-    add_library(GL3W STATIC)
-
-    target_sources(GL3W PRIVATE ${GL3W_DIR}/GL/gl3w.c)
-    target_include_directories(GL3W PUBLIC ${GL3W_DIR})
-    target_link_libraries(GL3W PUBLIC ${OPENGL_LIBRARIES})
-endif()
 
 
 #=================== IMGUI ===================
@@ -72,14 +52,10 @@ if(USE_GLES)
     else()
         target_link_libraries(IMGUI PUBLIC GLESv2)
     endif()
-
 else()
-    target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_LOADER_GL3W)
-    target_link_libraries(IMGUI PUBLIC GL3W)
-
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(IMGUI PUBLIC ${OPENGL_LIBRARIES})
 endif()
 
 
 target_link_libraries(IMGUI PUBLIC SDL2main SDL2 ${CMAKE_DL_LIBS})
-
-
