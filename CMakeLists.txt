@@ -14,10 +14,6 @@ endif()
 
 # ============================================
 
-# Do not search for OpenGL on raspbian. Use GLES instead.
-if(RASPBIAN)
-    set(USE_GLES ON) 
-endif()
 
 #Use openGLES instead of desktop GL. Automatically set if compiling on raspbian
 #set(USE_GLES ON)
