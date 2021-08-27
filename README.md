@@ -1,6 +1,6 @@
 # imgui-cmake
 
-Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. A thin multithreaded wrapper is also provided. This should work on:
+Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. This should work on:
 - Windows (tested, working)
 - Linux (tested, working)
 - Mac OS
@@ -8,7 +8,7 @@ Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple
 
 # How to Build
 
-To test the examples:
+To test the example:
 ```
 git clone https://github.com/Pesc0/imgui-cmake --recurse-submodules
 git submodule update --remote
@@ -23,10 +23,9 @@ To add the library to your project simply add this line to your CMakeLists.txt:
 ```
 add_subdirectory("path/to/imgui-cmake")
 ```
-then link against one of the provided targets: 
+then link against the provided target: 
 ```
 target_link_libraries(YourTarget IMGUI) 
-target_link_libraries(YourTarget IMGUIWRAPPER)
 ```
 
 # Raspberry support
@@ -42,8 +41,6 @@ On a Raspberry Pi 3 the performance is around 100-130 fps at 1080p for the imgui
 
 When using the broadcom drivers you may have to ```export SDL_VIDEODRIVER=rpi``` before running the program.
 
-# About the examples
+# About the example
 
-- `example_sdl_opengl3`: exactly the same as the original imgui example. It does not use the provided wrapper.
-- `example_wrapper_simple`: showcases how to use the multithreaded wrapper by displaying the imgui demo window. If all you want to do is get imgui working you should use this code.
-- `example_wrapper_withGL`: showcases how to use the multithreaded wrapper and additionally to the imgui demo a red triangle is drawn on the background, to show how OpenGL code can be integrated in the application. If you are doing anything remotely serious with OpenGL it is recommended you write your own engine and use the raw SDL and ImGui interfaces used in `example_sdl_opengl3`.
+- `example_sdl_opengl3`: exactly the same as the original imgui example. 
