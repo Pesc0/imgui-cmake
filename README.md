@@ -1,10 +1,15 @@
 # imgui-cmake
 
-Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. This should work on:
-- Windows 
-- Linux (tested, working)
-- Mac OS
-- Raspberry Pi (tested on Pi3, working)
+Simple project with cmake files to build imgui's example_sdl_opengl3 on multiple platforms. 
+
+This should work on:
+
+| Platform     | Status                              |
+| ------------ | ----------------------------------- |
+| Windows      | Not tested in a while, was working  |
+| Linux        | Tested, working                     |
+| Mac OS       | Never tested                        |
+| Raspberry Pi | Tested on Pi3, working              |
 
 # How to Build
 
@@ -12,7 +17,7 @@ To test the example:
 ```
 git clone https://github.com/Pesc0/imgui-cmake --recurse-submodules
 cd imgui-cmake
-git submodule update --remote
+git submodule foreach git pull origin HEAD
 mkdir build && cd build
 cmake -D BUILD_EXAMPLES=ON ..
 cmake --build . -j4
