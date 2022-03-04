@@ -3,22 +3,15 @@ cmake_minimum_required(VERSION 3.16.3)
 project(imgui-cmake LANGUAGES C CXX)
 
 
-# ============ Raspbian detection ============
+# Enable if building for raspberry
+#set(RASPBIAN ON)
 
-if(UNIX AND NOT APPLE)
-        execute_process(COMMAND bash "-c" "cat /etc/os-release | grep '^ID=' | sed 's/ID=//'" OUTPUT_VARIABLE __OS_RELEASE)
-        if(__OS_RELEASE MATCHES "raspbian")
-                set(RASPBIAN ON)
-        endif()
-endif()
-
-# ============================================
-
-
-#Use openGLES instead of desktop GL. Automatically set if compiling on raspbian
+# Use openGLES instead of desktop GL. This gets automatically set if compiling on raspbian
 #set(USE_GLES ON)
 
-#Use the brcmGLESv2 driver instead of GLESv2. May be required on versions older than pi4
+# Use the brcmGLESv2 driver instead of GLESv2. May be required to get hardware acceleration on versions older than pi4
+# Note that broadcom drivers are NOT available on the 64-bit version of raspberry pi os (aarch64). They're only
+# available on 32-bit (armv7l)
 #set(USE_BROADCOM_DRIVER ON)
 
 

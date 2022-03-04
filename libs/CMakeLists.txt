@@ -39,6 +39,7 @@ target_include_directories( IMGUI
 
 
 if(RASPBIAN)
+    #Not actually needed, just there for convenience
     target_compile_definitions(IMGUI PUBLIC -D__RASPBIAN__)
 
     # Do not search for OpenGL on raspbian. Use GLES instead.
