@@ -5,8 +5,8 @@
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
-if(RASPBIAN)
-    set(VIDEO_RPI ON)
+if(RASPBIAN AND RPI_HAS_NEON)
+    add_compile_options(-mfpu=neon)
 endif()
 
 set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL)
@@ -38,19 +38,10 @@ target_include_directories( IMGUI
                             )
 
 
-if(RASPBIAN)
-    #Not actually needed, just there for convenience
-    target_compile_definitions(IMGUI PUBLIC -D__RASPBIAN__)
-
-    # Do not search for OpenGL on raspbian. Use GLES instead.
-    set(USE_GLES ON) 
-endif()
-
-
-if(USE_GLES)
+if(USE_GLES OR RASPBIAN)
     target_compile_definitions(IMGUI PUBLIC -DIMGUI_IMPL_OPENGL_ES2)
 
-    if(RASPBIAN AND USE_BROADCOM_DRIVER)
+    if(RASPBIAN AND RPI_USE_BROADCOM_DRIVER)
         target_link_directories(IMGUI PUBLIC /opt/vc/lib)
         target_link_libraries(IMGUI PUBLIC brcmGLESv2 brcmEGL)
     else()
