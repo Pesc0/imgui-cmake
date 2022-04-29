@@ -1,8 +1,0 @@
-https://github.com/libsdl-org/SDL/blob/main/docs/README-raspberrypi.md
-
-I would suggest you configure SDL2 with --disable-video-rpi --enable-video-kmsdrm as options. 
-Unless you do, SDL2 gets configured with the old rpi driver in /opt/vc. 
-And with --enable-video-kmsdrm you can use SDL2 in console, without X11. 
-kmsdrm needs a couple of packages installed: libgdm-dev and libdrm-dev.
-
-https://discourse.libsdl.org/t/can-we-now-use-sdl2-without-x11/23421
