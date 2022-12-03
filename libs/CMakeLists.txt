@@ -1,6 +1,6 @@
 
 
-#=================== SDL2 ===================
+#=================== SDL3 ===================
 
 cmake_policy(SET CMP0077 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
@@ -9,8 +9,8 @@ if(RASPBIAN AND RPI_HAS_NEON)
     add_compile_options(-mfpu=neon)
 endif()
 
-set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL)
-add_subdirectory(${SDL2_DIR})
+set(SDL3_DIR ${CMAKE_CURRENT_SOURCE_DIR}/SDL)
+add_subdirectory(${SDL3_DIR})
 
 
 #=================== IMGUI ===================
@@ -34,7 +34,7 @@ target_sources( IMGUI
 target_include_directories( IMGUI
                             PUBLIC ${IMGUI_DIR}
                             PUBLIC ${IMGUI_DIR}/backends
-                            PUBLIC ${SDL2_DIR}/include
+                            PUBLIC ${SDL3_DIR}/include/SDL3
                             )
 
 
@@ -53,7 +53,7 @@ else()
 endif()
 
 
-target_link_libraries(IMGUI PUBLIC SDL2main SDL2 ${CMAKE_DL_LIBS})
+target_link_libraries(IMGUI PUBLIC SDL3 ${CMAKE_DL_LIBS})
 
 
 #=================== EXAMPLE ===================
