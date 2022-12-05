@@ -2,9 +2,6 @@
 
 #=================== SDL3 ===================
 
-cmake_policy(SET CMP0077 NEW)
-set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
-
 if(RASPBIAN AND RPI_HAS_NEON)
     add_compile_options(-mfpu=neon)
 endif()
