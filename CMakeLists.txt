@@ -23,3 +23,12 @@ project(imgui-cmake LANGUAGES C CXX)
 
 add_subdirectory("libs")
 
+
+#=================== EXAMPLE ===================
+
+if(BUILD_EXAMPLES)
+    add_executable(example_sdl_opengl3)
+    target_sources(example_sdl_opengl3 PUBLIC ${CMAKE_SOURCE_DIR}/libs/imgui/examples/example_sdl_opengl3/main.cpp)
+    target_link_libraries(example_sdl_opengl3 IMGUI)
+    set_target_properties(example_sdl_opengl3 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+endif()
