@@ -1,24 +1,13 @@
 # imgui-cmake
 
 Simple project with CMake files to build ImGui's example_sdl_opengl3 on multiple platforms. 
-
-The main focus is RaspberryPi support, but this will work just fine on desktops:
-
-| Platform     | Status                              |
-| ------------ | ----------------------------------- |
-| Windows      | Not tested in a while, was working  |
-| Linux        | Tested, working                     |
-| Mac OS       | Never tested                        |
-| Raspberry Pi | Tested on Pi3, working              |
-
-
-# How to Build
+The main focus is RaspberryPi support, but this will work just fine on Windows, Mac and Linux.
 
 To test the example:
 ```
 git clone https://github.com/Pesc0/imgui-cmake --recurse-submodules
 cd imgui-cmake
-git submodule foreach git pull origin HEAD
+#git submodule foreach git pull origin HEAD
 mkdir build && cd build
 cmake -D BUILD_EXAMPLES=ON ..
 cmake --build . -j4
@@ -26,24 +15,26 @@ cmake --build . -j4
 ```
 
 To add the library to your project simply add to your CMakeLists.txt: 
-
-```add_subdirectory("path/to/imgui-cmake")```
-
-Then link against the provided target: 
-
-```target_link_libraries(YourTarget IMGUI)```
+```
+add_subdirectory("path/to/imgui-cmake")
+target_link_libraries(YourTarget IMGUI)
+```
 
 
-# Raspberry support
+## Raspberry support
 
 ### Building
 You may need these dependencies: 
 
-```sudo apt install libxext-dev libgles-dev libgles2-mesa-dev libgdm-dev libgbm-dev libdrm-dev libudev-dev libasound2-dev libdbus-1-dev```
+```
+sudo apt install libxext-dev libgles-dev libgles2-mesa-dev libgdm-dev libgbm-dev libdrm-dev libudev-dev libasound2-dev libdbus-1-dev
+```
 
 VideoCore stuff (Broadcom drivers) which should be already installed by default: 
 
-```sudo apt install libraspberrypi0 libraspberrypi-bin libraspberrypi-dev```
+```
+sudo apt install libraspberrypi0 libraspberrypi-bin libraspberrypi-dev
+```
 
 Other notes: In old raspbian there's a bug with the latest versions of the gcc compiler: the `<limits.h>` file has been modified, and the `PATH_MAX` macro is missing. This causes an error when compiling some SDL files. Possible solutions are:
 - Use gcc-4.9 or an **earlier** version: when running cmake specify `-D CMAKE_C_COMPILER=gcc-4.9 -D CMAKE_CXX_COMPILER=g++-4.9`. This is not optimal since newer compilers tend to produce better code in general.
@@ -61,4 +52,6 @@ Regarding graphics, to render on Raspberry we have different options:
 It is also reccommended in the [SDL Raspberry documentation](https://github.com/libsdl-org/SDL/blob/main/docs/README-raspberrypi.md) to assign 128MB of ram (or more) to the GPU.
 
 ### Expected performance
-On a Raspberry Pi 3 the performance is around 100-130 fps at 1080p for the imgui demo. It can drop down to as low as 30 fps or even less if certain demanding features are being displayed. One example of such features are the colored buttons present in the demo under `layout & scrolling -> scrolling`.
+On a Raspberry Pi 3 the performance is around 100-130 fps at 1080p for the imgui demo. It can drop down to as low as 30 fps or even less if certain demanding features are being displayed. 
+
+An example of such features is the colored buttons present in the demo under "layout & scrolling -> scrolling"
