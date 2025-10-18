@@ -11,7 +11,7 @@ cd imgui-cmake
 mkdir build && cd build
 cmake -D BUILD_EXAMPLES=ON ..
 cmake --build . -j4
-./example_sdl_opengl3
+./example_sdl3_opengl3
 ```
 
 To add the library to your project simply add to your CMakeLists.txt: 
