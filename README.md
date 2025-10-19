@@ -50,7 +50,12 @@ Regarding graphics, to render on Raspberry we have different options:
 
 It is also reccommended in the [old SDL Raspberry documentation](https://github.com/libsdl-org/SDL/blob/670db4d248d93963ef9d7e7c84daeaaa7e5ed36b/docs/README-raspberrypi.md) to assign 128MB of ram (or more) to the GPU. The document has been [removed](https://github.com/libsdl-org/SDL/commit/96414fa56a4c3e1e2b9d81a611365e1260013e7f) long ago.
 
-Additional video info [here](https://pip.raspberrypi.com/categories/1259-audio-camera-and-display/documents/RP-004341-WP/Troubleshooting-KMS-HDMI-output.pdf) and [here](https://forums.raspberrypi.com/viewtopic.php?t=310315). It seems it is recommended on lower hardware (like the RPi 1 or Zero) to use the broadcom drivers for performance reasons, even if they are old/unsupported.
+Additional video info 
+- [here](https://pip.raspberrypi.com/categories/1259-audio-camera-and-display/documents/RP-004341-WP/Troubleshooting-KMS-HDMI-output.pdf) 
+- [here](https://forums.raspberrypi.com/viewtopic.php?t=310315)
+- and [here](https://forums.raspberrypi.com/viewtopic.php?t=317511)
+
+It seems it is recommended on lower hardware (like the RPi 1 or Zero) to use the broadcom drivers for performance reasons, even if they are old/unsupported.
 
 If not using `raspi-config` you can manually edit `/boot/config.txt`:
 - Set `dtoverlay=vc4-kms-v3d` to select the VC4 KMS driver 
